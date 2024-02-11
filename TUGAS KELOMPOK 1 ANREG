@@ -1,0 +1,72 @@
+#Persamaan Regresi
+hasil <- read.csv("C:/Users/mivir/Downloads/archive (2)/NFLX.csv", sep = ",")
+hasil
+
+n <- nrow(hasil)
+Y <- hasil$Volume
+X <- hasil$High
+Model <- lm(Volume~High,data = hasil)
+Model
+summary(Model)
+#dari model tsb, didapatkan nilai b0 dan b1, yakni
+b0 <- 71273767
+b1 <- -2421
+#Interpretasi persamaan regresi
+Maka persamaan garis regresinya adalah y duga = 7127376 - 2421x
+Artinya apabila harga jual meningkat maka dugaan volume penjualan saham akan turun sebesar b1 yaitu 2421 dan saat harga jual bernilai 0 maka volume penjualan sahamnya sebesar b0 yaitu 7127376
+
+
+#Korelasi determinasi
+cor.test(hasil$High,hasil$Volume,method = "pearson")
+#interpretasi korelasi
+Berdasarkan p value sebesar 0.5394 maka dapat disimpulkan bahwa tidak ada cukup bukti untuk menolak pengaruh Harga jual Netflix terhadap volume penjualan saham Netflix
+
+
+#Koefisien Determinasi
+JKG <- sum((Y - (b0+b1*X))^2)
+JKReg <- sum(((b0+b1*X)- mean(Y))^2)
+JKT <- sum((Y - mean(Y))^2)
+JKG; JKReg; JKT
+Koef_det <- JKReg/JKT
+Koef_det
+#interpretasi koefisien determinasi
+koefisien determinasi mendapatkan hasil 0.001514512, ini menunjukkan bahwa variabel (X) dalam model regresi hanya mampu menjelaskan sekitar 0.15% dari variasi dalam variabel (Y).
+
+#Adjusted R Square
+Adj_R2 <- 1-((1-Koef_det)*(n-1)/(n-1-1))
+Adj_R2
+
+#Interpretasi Adjusted R Square
+Nilai Adjusted R Square dapat bervariasi antara 0 dan 1. Nilai yang lebih tinggi menunjukkan bahwa model tersebut lebih baik dalam menjelaskan variasi dalam data.
+Interpretasi dari nilai Adjusted R Square yang negatif (-0.00249547), mungkin menandakan adanya masalah dalam model regresi.
+
+#Selang Kepercayaan b0
+KTG <- JKG/n-2
+s.b0 <- sqrt(KTG*(1/(n-2) + mean(X)^2/sum((X-mean(X))^2)))
+s.b1 <- sqrt(KTG/sum((X-mean(X))^2))
+s.b0; s.b1
+
+bb.b0 <- b0 - abs(qt(0.025, df=n-2))*s.b0
+ba.b0 <- b0 + abs(qt(0.025, df=n-2))*s.b0
+bb.b0; ba.b0
+#Dapat diinterpretasikan bahwa dalam taraf kepercayaan 5%, diyakini bahwa nilai parameter B0 berada dalam selang 3925468 sampai 10329284
+
+#Selang Kepercayaan b1
+bb.b1 <- b1 - abs(qt(0.025, df=n-2))*s.b1
+ba.b1 <- b1 + abs(qt(0.025, df=n-2))*s.b1
+bb.b1; ba.b1
+#Dapat diinterpretasikan bahwa dalam taraf kepercayaan 5%, diyakini bahwa nilai parameter B1 berada dalam selang -10148.81 sampai 5306.812
+
+#Keterhubungan linier
+plot(Y~X)
+#Uji hipotesis B1
+thit.b1 <- b1/s.b1
+thit.b1
+#Karena ttabel=1,97 dan thit<ttabel, maka tidak cukup bukti untuk menyatakan bahwa Harga Saham (Tertinggi) memiliki hubungan linear dengan Volume Penjualan Saham pada taraf nyata 5%
+#Uji hipotesis B0
+thit.b0 <- b0/s.b0
+thit.b0
+#Karena ttabel=12,706 dan thit<ttabel, maka tidak cukup bukti untuk menyatakan bahwa ada nilai Volume Penjualan Saham yang tidak bisa dijelaskan oleh nilai Harga Saham (Tertinggi) pada taraf nyata 5%
+
+#Alasan memilih topik
+Kami memilih Analisis volume perdagangan dikarenakan dapat memberikan wawasan tentang kekuatan tren pasar dan kekuatan pembeli serta penjual. Dengan menganalisis hubungan antara harga dan volume perdagangan, para analis dapat mengidentifikasi pola dan tren yang mungkin memengaruhi pergerakan harga saham di masa mendatang. Dengan nilai X yang kami gunakan merupakan harga tertinggi saat saham Netflix diperdagangkan pada siang hari dan nilai Y merupakan jumlah total saham yang diperdagangkan pada hari perdagangan tersebut.
